@@ -6,23 +6,24 @@ import ca.rttv.chatcalc.mixin.accessor.ChatInputSuggesterAccessor
 import ca.rttv.chatcalc.mixin.accessor.ChatScreenAccessor
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
-import net.minecraft.client.gui.screen.ChatScreen
-import net.minecraft.client.gui.widget.TextFieldWidget
+import net.minecraft.client.gui.components.EditBox
+import net.minecraft.client.gui.screens.ChatScreen
+import net.minecraft.network.chat.Component
 
-class ChatScreenDisplay(val chatField: TextFieldWidget, val suggester: ChatInputSuggesterAccessor) : DisplayAbove() {
+class ChatScreenDisplay(val chatField: EditBox, val suggester: ChatInputSuggesterAccessor) : DisplayAbove() {
 	override var x = 0 // This is set by the mixin
 	override val y get() = chatField.y - 4
 	override val centered = false
 
-	override fun parseWord(): String = ChatHelper.getSection(chatField.text, chatField.cursor)
+	override fun parseWord(): String = ChatHelper.getSection(chatField.message.toString(), chatField.cursorPosition)
 
 	override fun allowKeyPress(keycode: Int): Boolean = suggester.pendingSuggestions.let { suggestions ->
 		super.allowKeyPress(keycode)
 				|| suggestions == null
 				|| !suggestions.isDone
-				|| suggestions.isCompletedExceptionally
+				|| !suggestions.isCompletedExceptionally
 				|| !suggestions.getNow(null).isEmpty
-				|| !tryParse(chatField.text, chatField.cursor, chatField::setText)
+				|| !tryParse(chatField.message.toString(), chatField.cursorPosition) { chatField.setMessage(Component.literal(it)) }
 	}
 
 	companion object {

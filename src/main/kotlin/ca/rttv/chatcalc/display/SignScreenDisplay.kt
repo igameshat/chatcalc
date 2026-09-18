@@ -7,9 +7,10 @@ import me.ancientri.rimelib.util.client
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen
+import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner
 
 class SignScreenDisplay(val screen: AbstractSignEditScreen) : DisplayAbove() {
-	override val x: Int get() = (screen.width - 50 - 12) / 2
+	override val x: Int get() = (screen.width - MenuTooltipPositioner.MAX_DISTANCE_TO_WIDGET - 12) / 2
 	override val y: Int = 40 + client.font.lineHeight + 17
 
 	override fun parseWord(): String? = with(screen as AbstractSignEditScreenAccessor) {

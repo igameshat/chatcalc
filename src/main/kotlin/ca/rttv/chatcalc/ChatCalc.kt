@@ -40,7 +40,7 @@ object ChatCalc {
 	@JvmField
 	val FUNCTION_TABLE: HashSet<Pair<String, Int>> = HashSet()
 
-	const val COMPLETION_KEY = InputConstants.KEY_TAB;
+	const val COMPLETION_KEY = InputConstants.KEY_TAB
 
 	@JvmField
 	val NUMBER = Regex("[-+]?(\\d,?)*(\\.\\d+)?")
@@ -291,8 +291,10 @@ object ChatCalc {
 					if (solution == "-0") solution = "0"
 					config.saveToChatHud(originalText)
 					config.saveToClipboard(originalText)
-					return if (add) ChatHelper.addSectionAfterIndex(text, cursor, "=$solution", setMethod)
+
+					return if (add) ChatHelper.addSectionAfterIndex(originalText, cursor, "=$solution", setMethod)
 					else ChatHelper.replaceSection(originalText, cursor, solution, setMethod)
+
 				} catch (_: Exception) {
 					return false
 				}
